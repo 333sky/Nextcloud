@@ -59,7 +59,7 @@ These variables can be customized for your own system and are found in the main 
 
 | var            | default value                               | description                                                                 |
 | -------------- | ------------------------------------------- | --------------------------------------------------------------------------- |
-| nc_directory   | /var/www/html/nextcloud                     | This is the directory where the Nextcloud webpage files will be stores      |
+| nc_directory   | /var/www/html/nextcloud                     | This is the directory where the Nextcloud webpage files will be stored      |
 | nc_cache       | nc_cache                                    | This is the directory where the Nextcloud installer will download to        |
 | a2_se          | /etc/apache2/sites-enabled/nextcloud.conf   | This is the path to the nextcloud.conf file in sites-enabled                |
 | a2_sa          | /etc/apache2/sites-available/NEXTCLOUD.conf | This is the path to the NEXTCLOUD.conf file in sites-available              |
