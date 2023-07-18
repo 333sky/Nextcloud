@@ -1,0 +1,19 @@
+# this task only affects freshly provisioned Nextcloud installs (where config.php doesn't yet exist)
+- name: Give perms to nextcloud dir for db init
+  command: "sudo chmod -R 744 {{ nc_directory }}/nextcloud/"
+
+- name: Initialise the database and config.php (only works for fresh Nextcloud installation)
+  command: "sudo -u www-data php occ maintenance:install --database mysql --database-name {{ db_name }} --database-user {{ db_login }} --database-pass {{ db_pw }} --database-host localhost --database-port 3306 --admin-user {{ nc_user }} --admin-pass {{ nc_pw }} --data-dir {{ nc_directory }}/nextcloud/data"
+  args:
+    chdir: "{{ nc_directory }}/nextcloud"
+
+- name: Insert the trusted ip domain
+  tags: trust
+  lineinfile:
+    path: "{{ nc_directory }}/nextcloud/config/config.php
+    line: 1 => '{{ trusted_domain }}',
+    insertafter: 0 => 'localhost',"
+
+#    creates: "{{ nc_directory }}/nextcloud/config/config.php"
+#  become: true
+#  become_user: "www-data"

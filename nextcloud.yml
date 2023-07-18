@@ -1,0 +1,24 @@
+---
+
+- hosts: mynode
+  vars:
+    - nc_directory: /var/www/html/nextcloud
+    - nc_cache: nc_cache 
+    - a2_se: /etc/apache2/sites-enabled/nextcloud.conf
+    - a2_sa: /etc/apache2/sites-available/NEXTCLOUD.conf
+    - db_name: NEXTCLOUD
+    - db_login: root
+    - db_sock: /var/run/mysqld/mysqld.sock
+    - db_pw: test123
+    - nc_user: NEXTCLOUD_USER
+    - nc_pw: test123
+    - trusted_domain: 192.168.1.124
+    
+
+  become: true
+  roles:
+    - install
+    - download
+    - database
+    - apacheconfig
+    - postinstall

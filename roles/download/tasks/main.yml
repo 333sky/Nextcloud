@@ -1,0 +1,49 @@
+- name: Create the Nextcloud cache directory for installer download
+  file:
+    path: "{{ nc_cache }}"
+    state: directory
+
+# in comment zodat 't niet constant opnieuw download?
+
+- name: download latest nextcloud to cache
+  ansible.builtin.get_url:
+    url: https://download.nextcloud.com/server/releases/latest.tar.bz2
+    dest: "{{ nc_cache }}"
+
+
+- name: Create the Nextcloud www-root directory
+  file:
+    path: "{{ nc_directory }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+
+# temp dirty fix
+
+- name: Unpack nextcloud download
+  become: true
+  command: "tar -xf {{ nc_cache }}/latest.tar.bz2 -C {{ nc_directory }}"
+
+#- name: Give perms to html mapken
+#  become: true
+#  command: chown -R www-data:www-data {{ nc_directory }}/*
+
+- name: Give {{ nc_directory }} perms
+  tags: perms
+  file:
+    path: "{{ nc_directory }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+#- name: Unpack Nextcloud archive to www-root directory
+#  unarchive:
+#    remote_src: yes
+#    extra_opts: "--strip-components=1"
+#    src: {{ nc_cache }}
+#    dest: {{ nc_directory }}
+#    owner: www-data
+#    group: www-data

@@ -1,0 +1,30 @@
+---
+- name: "Configure Apache vhost NEXTCLOUD"
+  ansible.builtin.template:
+    src: vhosts.j2
+    dest: "{{ a2_sa }}"
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+#  notify: reload apache
+
+- name: "Check whether site NEXTCLOUD is already enabled"
+  ansible.builtin.stat:
+    path: "{{ a2_se }}"
+  register: vhost_enabled
+
+- name: "a2ensite NEXTCLOUD.conf and reload/restart apache"
+  command: "a2ensite NEXTCLOUD.conf"
+  when: not (vhost_enabled.stat.exists | bool)
+
+
+- name: "a2enmod en restart apache"
+  command: "a2enmod rewrite dir mime env headers"
+#  notify: reload apache
+
+
+#put this in a handler to notify?
+- name: reload apache2
+  ansible.builtin.systemd:
+    name: "apache2"
+    state: reloaded 

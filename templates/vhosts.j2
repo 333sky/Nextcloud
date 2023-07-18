@@ -1,0 +1,19 @@
+<VirtualHost *:80>
+     ServerAdmin admin@example.com
+     DocumentRoot {{ nc_directory }}/
+     ServerName example.com
+     ServerAlias www.example.com
+     ErrorLog /var/log/apache2/nextcloud-error.log
+     CustomLog /var/log/apache2/nextcloud-access.log combined
+ 
+    <Directory {{ nc_directory }}/>
+	Options +FollowSymlinks
+	AllowOverride All
+        Require all granted
+ 	SetEnv HOME {{ nc_directory }}
+ 	SetEnv HTTP_HOME {{ nc_directory }}
+ 	<IfModule mod_dav.c>
+  	  Dav off
+        </IfModule>
+    </Directory>
+</VirtualHost>

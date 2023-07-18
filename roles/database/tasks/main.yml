@@ -1,0 +1,29 @@
+- name: Upgrade pip to be able to install pymysql
+  pip:
+     name: pip
+     extra_args: --upgrade
+
+- name: Install pip PyMySQL package
+  pip:
+     name: PyMySQL
+
+- name: Create database {{ db_name }}
+  community.mysql.mysql_db:
+    name: "{{ db_name }}"
+    state: present
+    login_unix_socket: "{{ db_sock }}"
+    login_user: root
+    login_password: "{{ db_pw }}"
+
+- name: Create database user {{ db_login }} for database {{ db_name }}
+  # give user nextcloud privileges on the new database (without affecting existing privs)
+  community.mysql.mysql_user:
+    name: "{{ db_login }}"
+    password: "{{ db_pw }}"
+    login_unix_socket: "{{ db_name }}"
+    state: present
+    append_privs: yes
+    # have to login as root to edit the user table
+    login_user: root
+    login_password: "{{ db_pw }}"
+    priv: '{{ db_name }}.*:ALL'
